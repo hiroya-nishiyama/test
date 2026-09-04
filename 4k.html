@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>画像自動更新タブ</title>
+    <style>
+        /* タブのシンプルなスタイル */
+        .tab-buttons { margin-bottom: 10px; }
+        .tab-button { padding: 10px 20px; cursor: pointer; }
+        .tab-button.active { background-color: #ddd; font-weight: bold; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        img { max-width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+
+    <!-- タブボタン -->
+    <div class="tab-buttons">
+        <button class="tab-button active" onclick="switchTab(0)">画像 1</button>
+        <button class="tab-button" onclick="switchTab(1)">画像 2</button>
+    </div>
+
+    <!-- タブの中身（画像） -->
+    <div id="tab0" class="tab-content active">
+        <img id="img1" src="" alt="画像1">
+    </div>
+    <div id="tab1" class="tab-content">
+        <img id="img2" src="" alt="画像2">
+    </div>
+
+    <script>
+        // WebARENAの画像URL（ご自身の環境に合わせて変更してください）
+        const img1BaseUrl = "https://あなたのドメイン/image1.jpg";
+        const img2BaseUrl = "https://あなたのドメイン/image2.jpg";
+
+        // 画像を更新する関数（キャッシュ対策の ?t= タイムスタンプ付き）
+        function refreshImages() {
+            const timestamp = new Date().getTime();
+            document.getElementById("img1").src = `${img1BaseUrl}?t=${timestamp}`;
+            document.getElementById("img2").src = `${img2BaseUrl}?t=${timestamp}`;
+            console.log("画像を更新しました: " + new Date().toLocaleTimeString());
+        }
+
+        // タブ切り替え関数
+        function switchTab(index) {
+            const buttons = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            buttons.forEach((btn, i) => btn.classList.toggle('active', i === index));
+            contents.forEach((content, i) => content.classList.toggle('active', i === index));
+        }
+
+        // 初回読み込みと、1分（60000ミリ秒）ごとの自動定期更新
+        refreshImages();
+        setInterval(refreshImages, 60000);
+    </script>
+</body>
+</html>
